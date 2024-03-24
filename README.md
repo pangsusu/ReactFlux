@@ -1,6 +1,6 @@
 ## ReactFlux
 
-### 概述
+### 概述  
 
 Reactflux 是 [Miniflux](https://github.com/miniflux/miniflux) 的第三方 Web 前端，提供了更为友好的阅读体验。
 
