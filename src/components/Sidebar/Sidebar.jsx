@@ -48,24 +48,6 @@ const GroupTitle = ({ group, isOpen }) => (
   </div>
 );
 
-const CustomMenuItem = ({ count, icon, key, label, onClick }) => (
-  <MenuItem key={key} onClick={onClick}>
-    <div className="custom-menu-item">
-      <span>
-        {icon}
-        {label}
-      </span>
-      <Typography.Ellipsis
-        className="item-count"
-        expandable={false}
-        showTooltip={true}
-      >
-        {count || ""}
-      </Typography.Ellipsis>
-    </div>
-  </MenuItem>
-);
-
 const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -98,8 +80,16 @@ const Sidebar = () => {
     return groupedFeeds;
   }, {});
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     setSelectedKeys([path]);
+    if (!collapsed) {
+      const viewportWidth = window.innerWidth;
+      if (viewportWidth <= 992) {
+        setCollapsed(true);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path]);
 
   useEffect(() => {
@@ -170,34 +160,66 @@ const Sidebar = () => {
         <Skeleton loading={loading} animation={true} text={{ rows: 3 }} />
         {loading ? null : (
           <div>
-            <CustomMenuItem
-              count={unreadTotal}
-              icon={<IconUnorderedList />}
-              key={"/"}
-              label="All"
-              onClick={() => navigate("/")}
-            />
-            <CustomMenuItem
-              count={unreadToday}
-              icon={<IconCalendar />}
-              key={"/today"}
-              label="Today"
-              onClick={() => navigate("/today")}
-            />
-            <CustomMenuItem
-              count={starredCount}
-              icon={<IconStar />}
-              key={"/starred"}
-              label="Starred"
-              onClick={() => navigate("/starred")}
-            />
-            <CustomMenuItem
-              count={readCount}
-              icon={<IconHistory />}
-              key={"/history"}
-              label="History"
-              onClick={() => navigate("/history")}
-            />
+            <MenuItem key={"/"} onClick={() => navigate("/")}>
+              <div className="custom-menu-item">
+                <span>
+                  <IconUnorderedList />
+                  All
+                </span>
+                <Typography.Ellipsis
+                  className="item-count"
+                  expandable={false}
+                  showTooltip={true}
+                >
+                  {unreadTotal || ""}
+                </Typography.Ellipsis>
+              </div>
+            </MenuItem>
+            <MenuItem key={"/today"} onClick={() => navigate("/today")}>
+              <div className="custom-menu-item">
+                <span>
+                  <IconCalendar />
+                  Today
+                </span>
+                <Typography.Ellipsis
+                  className="item-count"
+                  expandable={false}
+                  showTooltip={true}
+                >
+                  {unreadToday || ""}
+                </Typography.Ellipsis>
+              </div>
+            </MenuItem>
+            <MenuItem key={"/starred"} onClick={() => navigate("/starred")}>
+              <div className="custom-menu-item">
+                <span>
+                  <IconStar />
+                  Starred
+                </span>
+                <Typography.Ellipsis
+                  className="item-count"
+                  expandable={false}
+                  showTooltip={true}
+                >
+                  {starredCount || ""}
+                </Typography.Ellipsis>
+              </div>
+            </MenuItem>
+            <MenuItem key={"/history"} onClick={() => navigate("/history")}>
+              <div className="custom-menu-item">
+                <span>
+                  <IconHistory />
+                  History
+                </span>
+                <Typography.Ellipsis
+                  className="item-count"
+                  expandable={false}
+                  showTooltip={true}
+                >
+                  {readCount || ""}
+                </Typography.Ellipsis>
+              </div>
+            </MenuItem>
           </div>
         )}
         <Typography.Title
